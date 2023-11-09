@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!-- 请确保CKEditor文件路径正确 -->
+    <script src="{{ url_for('static', filename='ckeditor/ckeditor.js') }}"></script>
+    <script src="http://adfengniao.com/statics/js/jquery.js"></script>
+    <script src="http://adfengniao.com/tpl_admin/simpleboot/assets/js/index.js"></script>
+
+</head>
+<body>
+    <form>
+        <textarea name="content" id="ckeditor" class="ckeditor" rows="10" cols="80">
+                This is my textarea to be replaced with CKEditor.
+        </textarea>
+    </form>
+
+    <li>
+        <a href="javascript:openapp('/index.php?g=Admin&amp;m=Backup&amp;a=restore&amp;menuid=41','41Admin','数据还原');">
+            <span class="menu-text">数据还原</span>
+        </a>
+    </li>
+<script>
+        CKEDITOR.replace('ckeditor', {
+            filebrowserUploadUrl:'/ckupload/',  //文件上传路径。若设置了，则上传按钮会出现在链接、图片、Flash对话窗口。
+            //filebrowserImageUploadUrl:'/ckupload/'  // 图片上传路径。若不设置，则使用filebrowserUploadUrl值。
+            //filebrowserFlashUploadUrl ： Flash上传路径。若不设置，则使用filebrowserUploadUrl值。
+            //image_previewText = ' '
+        });
+</script>
+
+<script type="text/javascript">
+(function(){
+var tab_tit  = document.getElementById('think_page_trace_tab_tit').getElementsByTagName('span');
+var tab_cont = document.getElementById('think_page_trace_tab_cont').getElementsByTagName('div');
+var open     = document.getElementById('think_page_trace_open');
+var close    = document.getElementById('think_page_trace_close').childNodes[0];
+var trace    = document.getElementById('think_page_trace_tab');
+var cookie   = document.cookie.match(/thinkphp_show_page_trace=(\d\|\d)/);
+var history  = (cookie && typeof cookie[1] != 'undefined' && cookie[1].split('|')) || [0,0];
+open.onclick = function(){
+	trace.style.display = 'block';
+	this.style.display = 'none';
+	close.parentNode.style.display = 'block';
+	history[0] = 1;
+	document.cookie = 'thinkphp_show_page_trace='+history.join('|')
+}
+close.onclick = function(){
+	trace.style.display = 'none';
+this.parentNode.style.display = 'none';
+	open.style.display = 'block';
+	history[0] = 0;
+	document.cookie = 'thinkphp_show_page_trace='+history.join('|')
+}
+for(var i = 0; i < tab_tit.length; i++){
+	tab_tit[i].onclick = (function(i){
+		return function(){
+			for(var j = 0; j < tab_cont.length; j++){
+				tab_cont[j].style.display = 'none';
+				tab_tit[j].style.color = '#999';
+			}
+			tab_cont[i].style.display = 'block';
+			tab_tit[i].style.color = '#000';
+			history[1] = i;
+			document.cookie = 'thinkphp_show_page_trace='+history.join('|')
+		}
+	})(i)
+}
+parseInt(history[0]) && open.click();
+(tab_tit[history[1]] || tab_tit[0]).click();
+})();
+</script>
+</body>
+</html>
