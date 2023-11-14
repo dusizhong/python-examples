@@ -48,7 +48,9 @@ try:
 			html1 = resp1.read().decode('utf-8')
 			soup1 = BeautifulSoup(html1, features='lxml')
 			title1 = soup1.select('.j_chapterName')[0].text
-			content1 = str(soup1.select('.read-content')[0].p)
+			content1 = ''
+			for c in soup1.select('.read-content')[0].select('p'):
+				content1 = content1 + str(c)
 			data = []
 			data.append(sf.get_id())
 			data.append(i)
