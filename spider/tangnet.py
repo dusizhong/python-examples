@@ -1,12 +1,14 @@
 # spider for tangnet.cn
 # @date 20231109
-# @author
+# @author d
 import urllib.request, urllib.error
 from bs4 import BeautifulSoup
 import re
 import random
 import time
 import xlwt
+from snowflake import SnowFlake
+from datetime import datetime
 
 baseurl = 'http://www.tangnet.cn'
 headers = { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36' }
@@ -33,23 +35,47 @@ try:
 	titlePattern = re.compile(r'<p>\d')
 
 	dataList = []
+	sf = SnowFlake(datacenter_id=1, worker_id=1)
+	i = 1
 	for item in contents:
 		item = str(item)
 		links = re.findall(findLink, item)
-		print(len(links))
-		for l in links:
-			print(l)
-			req1 = urllib.request.Request(baseurl + l, headers=headers)
+		print(f'目录总条数为：{len(links)}')
+		for link in links:
+			print(f'开始获取内容{i}: ', end='')
+			req1 = urllib.request.Request(baseurl + link, headers=headers)
 			resp1 = urllib.request.urlopen(req1, timeout=10.01)
 			html1 = resp1.read().decode('utf-8')
 			soup1 = BeautifulSoup(html1, features='lxml')
 			title1 = soup1.select('.j_chapterName')[0].text
-			print(title1)
-			content1 = soup1.select('.read-content')[0].text
-			print(content1)
+			content1 = str(soup1.select('.read-content')[0].p)
+			data = []
+			data.append(sf.get_id())
+			data.append(i)
+			data.append('伤寒论')
+			data.append(title1)
+			print(f'{title1}...')
+			data.append(content1)
+			data.append('0')
+			data.append(datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+			dataList.append(data)
 			sleepTime = random.randint(2, 5)
 			time.sleep(sleepTime)
+			print('完毕')
+			i = i + 1
+			# if i > 3:
+			# 	break
 	# print(dataList)
+
+	myexcel = xlwt.Workbook(encoding="utf-8", style_compression=0)
+	sheet1 = myexcel.add_sheet("sheet1", cell_overwrite_ok=True)
+	head = ("id", "sort_id", "book_name", "chapter_name", "content_text", 'status', 'create_time')
+	for item in head:
+		sheet1.write(0, head.index(item), item)
+	for data in dataList:
+		for d in data:
+			sheet1.write(dataList.index(data)+1, data.index(d), d)
+	myexcel.save('D:\\PythonProjects\\tangnet.xls')
 
 except urllib.error.URLError as e:
     print('error occur: ', e)
