@@ -1,0 +1,5 @@
+# pip install -r requirement
+# download chromedriver.exe to script floder
+
+beautifulsoup4
+webdrivermanager

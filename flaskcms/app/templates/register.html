@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block page_body %}
+    <div class="container">
+        {% for message in get_flashed_messages() %}
+            <div class="alert-info"> {{ message }}</div>
+        {% endfor %}
+        <p>neirong</p>
+    </div>
+<p> kk </p>
+{{ cu }}
+{% endblock %}

@@ -1,0 +1,11 @@
+打包可执行文件：
+pip install pyinstaller
+打包单个exe文件：
+pyinstaller -F app.py
+打包到一个目录中：
+pyinstaller -D app.py
+
+
+连接mysql数据库：
+pip install mysql-connector-python
+

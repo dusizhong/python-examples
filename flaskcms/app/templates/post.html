@@ -1,0 +1,14 @@
+<!-- extend base layout -->
+{% extends "base.html" %}
+
+{% block content %}
+<script type="text/javascript">
+</script>
+<h1>Sign In</h1>
+<form action="" method="post" name="dopost">
+    {{ form.hidden_tag() }}
+    <p>{{ form.username.label }} {{ form.username() }} </p>
+    <p>{{ form.password.label }} {{ form.password() }}</p>
+    <p><input type="submit" value="Sign In"></p>
+</form>
+{% endblock %}
